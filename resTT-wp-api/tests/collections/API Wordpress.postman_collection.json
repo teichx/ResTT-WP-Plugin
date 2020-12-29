@@ -1,0 +1,373 @@
+{
+	"info": {
+		"_postman_id": "1be51199-ce37-4a97-a5ff-01f8a8baf897",
+		"name": "API Wordpress",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[Index] Listar posts padrão",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var firstPostId = responseJSON.header[0].id;\r",
+							"var firstPostSlug = responseJSON.header[0].slug;\r",
+							"\r",
+							"pm.environment.set(\"post_id\", firstPostId);\r",
+							"pm.environment.set(\"post_slug\", firstPostSlug);\r",
+							"\r",
+							"tests[`Salvo post_id = ${firstPostId}`] = !!firstPostId;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/index",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"index"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Index] Listar posts, especificando header e body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/index?header=5&body=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"index"
+					],
+					"query": [
+						{
+							"key": "header",
+							"value": "5"
+						},
+						{
+							"key": "body",
+							"value": "0"
+						}
+					]
+				},
+				"description": "Index com 5 Header e 0 body"
+			},
+			"response": []
+		},
+		{
+			"name": "[Index] Listar posts e trazendo o conteúdo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var firtPostContent = responseJSON.header[0].content;\r",
+							"pm.environment.set(\"post_content\", firtPostContent);\r",
+							"tests[\"O primeiro post selecionado possui conteudo\"] = !!firtPostContent;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/index?content=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"index"
+					],
+					"query": [
+						{
+							"key": "content",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Ids] Listar todos IDs de Posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"tests[\"A lista retornou Ids\"] = responseJSON.length > 0;\r",
+							"var idDoPrimeiroPost = pm.environment.get(\"post_id\");\r",
+							"tests[\"Foi encontrado na lista de Ids, o ID do primeiro post\"] = responseJSON.find(e => e === idDoPrimeiroPost);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/ids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"ids"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Content] Seleciona conteúdo de um post pelo ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var postContent = pm.environment.get(\"post_content\");\r",
+							"tests[\"O postContent retornado pelo ID existe\"] = !!responseJSON.content;\r",
+							"tests[\"O postContent armazenado é igual o content retornado pelo ID\"] = responseJSON.content === postContent;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/content/{{post_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"content",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[ContentPerSlug] Seleciona conteúdo de um post pelo SLUG",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var postContent = pm.environment.get(\"post_content\");\r",
+							"tests[\"O postContent retornado pelo SLUG existe\"] = !!responseJSON.content;\r",
+							"tests[\"O postContent armazenado é igual o content retornado pelo SLUG\"] = responseJSON.content === postContent;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/content_per_slug/{{post_slug}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"content_per_slug",
+						"{{post_slug}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Post] Seleciona um Post por ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var postContent = pm.environment.get(\"post_content\");\r",
+							"var postID = pm.environment.get(\"post_id\");\r",
+							"var postSlug = pm.environment.get(\"post_slug\");\r",
+							"\r",
+							"tests[\"O postContent retornado pelo ID existe\"] = !!responseJSON.content;\r",
+							"tests[\"O postContent armazenado é igual o content retornado pelo ID\"] = responseJSON.content === postContent;\r",
+							"tests[\"O id armazenado é igual o id retornado da busca por ID\"] = responseJSON.id === postID;\r",
+							"tests[\"O slug armazenado é igual o slug retornado da busca por ID\"] = responseJSON.slug === postSlug;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/post/{{post_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"post",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Post] Seleciona um Post por SLUG",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code === 200\"] = responseCode.code === 200;\r",
+							"\r",
+							"var responseJSON;\r",
+							"\r",
+							"try { responseJSON = JSON.parse(responseBody); }\r",
+							"catch (e) { }\r",
+							"\r",
+							"var postContent = pm.environment.get(\"post_content\");\r",
+							"var postID = pm.environment.get(\"post_id\");\r",
+							"var postSlug = pm.environment.get(\"post_slug\");\r",
+							"\r",
+							"tests[\"O postContent retornado pelo SLUG existe\"] = !!responseJSON.content;\r",
+							"tests[\"O postContent armazenado é igual o content retornado pelo SLUG\"] = responseJSON.content === postContent;\r",
+							"tests[\"O id armazenado é igual o id retornado da busca por SLUG\"] = responseJSON.id === postID;\r",
+							"tests[\"O slug armazenado é igual o slug retornado da busca por SLUG\"] = responseJSON.slug === postSlug;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/blog/wp-json/restt/v1/post_per_slug/{{post_slug}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"blog",
+						"wp-json",
+						"restt",
+						"v1",
+						"post_per_slug",
+						"{{post_slug}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
