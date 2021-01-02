@@ -12,6 +12,18 @@
 
   require_once( resTT__PLUGIN_DIR . 'resTT-helpers.php' );
 
+  function resTT_menu_principal(){
+    $menus = wp_get_nav_menu_items('menu-principal');
+    $menuJson = [];
+    foreach($menus as $menu){
+      array_push($menuJson, array(
+        'title' => $menu->title,
+        'slug' => GenerateSlugPerTitle($menu->title)
+      ));
+    }
+    return $menuJson;
+  }
+
   function resTT_post_content_per_slug($params){
     $post = get_posts([
       'name' => $params['slug'],
@@ -111,6 +123,11 @@
     register_rest_route('resTT/v1', 'post_per_slug/(?P<slug>[a-zA-Z0-9-]+)', [
       'methods' => 'GET',
       'callback' => 'resTT_post_per_slug'
+    ]);
+    
+    register_rest_route('resTT/v1', 'menu', [
+      'methods' => 'GET',
+      'callback' => 'resTT_menu_principal'
     ]);
     
   });
