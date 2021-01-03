@@ -11,13 +11,15 @@
   define( 'resTT__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
   require_once( resTT__PLUGIN_DIR . 'resTT-helpers.php' );
+  require_once( resTT__PLUGIN_DIR . 'resTT-wp-cache.php' );
+
 
   function resTT_menu_principal(){
     $menus = wp_get_nav_menu_items('menu-principal');
     $menuJson = [];
     foreach($menus as $menu){
       array_push($menuJson, array(
-        'title' => $menu->title,
+        'title' => $menu->title, 
         'slug' => GenerateSlugPerTitle($menu->title)
       ));
     }
