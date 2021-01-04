@@ -11,7 +11,8 @@
     foreach($categories as $category){
       array_push($categoriesArray, array(
         'slug' => $category->slug,
-        'name' => $category->name
+        'name' => $category->name,
+        'id' => $category->cat_ID,
       ));
     }
 
