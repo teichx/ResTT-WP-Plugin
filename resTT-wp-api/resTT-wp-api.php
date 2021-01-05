@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: ResTT
- * Plugin URI: github.com/teichx
- * Description: API Rest para otimizar as consultas para o Blog feito em React
+ * Plugin URI: https://github.com/teichx/ResTT-WP-Plugin
+ * Description: API Rest para otimizar a busca de dados para Front Ends
  * Version: 1.0
  * Author: Temístocles Schwartz
  * Author URI: https://www.linkedin.com/in/temistocles-schwartz/
