@@ -65,7 +65,7 @@
   }
 
   function removeHost($url){
-    [$http, $urlWithoutServer] = explode($_SERVER['HTTP_HOST'], $url);
-    return $urlWithoutServer;
+    $hostExplode = explode($_SERVER['HTTP_HOST'], $url);
+    return $hostExplode[1];
   }
 ?>
