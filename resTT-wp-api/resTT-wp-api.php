@@ -20,7 +20,7 @@
     foreach($menus as $menu){
       array_push($menuJson, array(
         'title' => $menu->title, 
-        'slug' => GenerateSlugPerTitle($menu->title)
+        'slug' => GenerateLinkMenu($menu->url, $menu->object)
       ));
     }
     return $menuJson;
