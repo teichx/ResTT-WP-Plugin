@@ -70,19 +70,25 @@
   }
 
   function resTT_posts_default($params){
-    $countPosts = intval(getParamOrDefault($params, 'count', 12));  //13
-    $showContent = getParamOrDefault($params, 'content', false);    //
-    $page = getParamOrDefault($params, 'page', 1);                  //2
-    $offsetParam = getParamOrDefault($params, 'offset', 0);         //0
+    $countPosts = intval(getParamOrDefault($params, 'count', 12));
+    $showContent = getParamOrDefault($params, 'content', false);
+    $page = getParamOrDefault($params, 'page', 1);
+    $offsetParam = getParamOrDefault($params, 'offset', 0);
+    $category = getParamOrDefault($params, 'category', 0);
+
 
     $offset = ($countPosts * ($page - 1)) + $offsetParam;
 
-    $posts = get_posts([
+
+    $filterArgs = [
       'numberposts' => $countPosts,
       'post_type' => 'post',
       'post_status'=>'publish',
       'offset' => $offset,
-    ]);
+      'category_name' => $category,
+    ];
+
+    $posts = get_posts($filterArgs);
   
     $data = [];
     foreach($posts as $post) {
