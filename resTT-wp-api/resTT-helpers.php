@@ -26,6 +26,10 @@
     $thumbnail = get_the_post_thumbnail_url($post->ID, 'large');
     $image = is_null($thumbnail) ? get_option('img_NE') : $thumbnail;
 
+    $postsAdjacentes = getPreviousAndNextPostSlug($post->ID);
+    $previousPost = $postsAdjacentes[0];
+    $nextPost = $postsAdjacentes[1];
+
     $responsePost = array(
       'id' => $post->ID,
       'title' => $post->post_title,
@@ -33,6 +37,8 @@
       'image' => $image,
       'data' => date('d/m/Y', strtotime($post->post_date)),
       'categories' => getCleanCategories($post->ID),
+      'previous' => $previousPost,
+      'next' => $nextPost,
     );
     
     if($getContent == true){
@@ -68,4 +74,28 @@
     $hostExplode = explode($_SERVER['HTTP_HOST'], $url);
     return $hostExplode[1];
   }
+
+  function getPreviousAndNextPostSlug( $post_id ) {
+    global $post;
+
+    $oldGlobal = $post;
+
+    $post = get_post( $post_id );
+
+    $previousPost = get_previous_post();
+    $nextPost = get_next_post();
+
+    $post = $oldGlobal;
+
+    $ids = [];
+    array_push($ids, '' != $previousPost 
+      ? $previousPost->post_name
+      : 0);
+
+    array_push($ids, '' != $nextPost 
+      ? $nextPost->post_name
+      : 0);
+
+    return $ids;
+}
 ?>
