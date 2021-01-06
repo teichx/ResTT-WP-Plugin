@@ -69,37 +69,33 @@
     return $postsIds;
   }
 
-  function resTT_posts_index($params){
-    $countHeaderPosts = intval(getParamOrDefault($params, 'header', 3));
-    $countBodyPosts = intval(getParamOrDefault($params, 'body', 7));
-    $showContent = getParamOrDefault($params, 'content', false);
-    $totalPosts = $countHeaderPosts + $countBodyPosts;
+  function resTT_posts_default($params){
+    $countPosts = intval(getParamOrDefault($params, 'count', 12));  //13
+    $showContent = getParamOrDefault($params, 'content', false);    //
+    $page = getParamOrDefault($params, 'page', 1);                  //2
+    $offsetParam = getParamOrDefault($params, 'offset', 0);         //0
+
+    $offset = ($countPosts * ($page - 1)) + $offsetParam;
 
     $posts = get_posts([
-      'numberposts' => $totalPosts,
+      'numberposts' => $countPosts,
       'post_type' => 'post',
       'post_status'=>'publish',
+      'offset' => $offset,
     ]);
   
-    $data = array(
-      'header' => [], 
-      'body' => []
-    );
-
-    $i = 0;
+    $data = [];
     foreach($posts as $post) {
-      $position = $i < $countHeaderPosts ? 'header' : 'body';
-      array_push($data[$position], filterPostParams($post, $showContent));
-      $i++;
+      array_push($data, filterPostParams($post, $showContent));
     }
   
     return $data;
   }
 
   add_action('rest_api_init', function(){
-    register_rest_route('resTT/v1', 'index', [
+    register_rest_route('resTT/v1', 'posts', [
       'methods' => 'GET',
-      'callback' => 'resTT_posts_index'
+      'callback' => 'resTT_posts_default'
     ]);
 
     register_rest_route('resTT/v1', 'ids', [

@@ -31,7 +31,7 @@
       'title' => $post->post_title,
       'slug' => $post->post_name,
       'image' => $image,
-      'data' => get_post_time(get_option('date_format'), true, $post, true),
+      'data' => date('d/m/Y', strtotime($post->post_date)),
       'categories' => getCleanCategories($post->ID),
     );
     
